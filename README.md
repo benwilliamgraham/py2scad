@@ -24,7 +24,6 @@ Usage:
 # makes a 10x10 square in the first quadrant
 Square(10)
 Square(size=10, centered=False)
-
 # makes a 10x20 square centered at the origin
 Square([10, 20], centered=True)
 Square(size=[10, 20], centered=True)
@@ -49,45 +48,196 @@ Circle(radius=4, sides=24)
 ```
 
 ### Polygon
-A custom, multi-sided 2D object.
-
-Parameters:
-
-* points: A list of `x, y` lists or tuples describing a polygon
-
-Usage:
-```python
-# makes a 10x10 rhombus
-Polygon([(0, 0), (8, 0), (10, 10), (2, 10)])
-Polygon(points=[(0, 0), (8, 0), (10, 10), (2, 10)])
-```
+Coming soon.
 
 ### Text
-Custom 2D text.
+Coming soon.
+
+### Cube
+A cube/rectangular prism 3D object.
 
 Parameters:
-* text: A string of the text to generate.
-* size: A numeric value of size of the font. (default `10`)
-* font: A string of the font to be used. (default `None`)
-* spacing: A numeric value describing the spacing between letters. (default `1`)
+* size:
+
+    A single numeric value `l` for an `l`x`l`x`l` cube.
+
+    A list/tuple of three numeric values `x`, `y`, `z` for an `x`x`y`x`z` rectangular prism.
+
+* centered:
+
+    `False` to start in first quadrant. (default)
+
+    `True` to center at the origin.
 
 Usage:
 ```python
-# makes the text "Hello" with size 10
-Text("Hello")
-Text(text="Hello", size=10)
-# makes the text "Hello" with size 20 and double spacing
-Text("Hello", size=20, spacing=2)
-Text(text="Hello", size=20, spacing=2)
+# makes a 10x10x10 cube in the first quadrant
+Cube(10)
+Cube(size=[10, 10, 10], centered=False)
+# makes a 10x20x30 rectangular prism centered at the origin
+Cube([10, 20, 30], centered=True)
+Cube(size=[10, 20, 30], centered=True)
 ```
 
-### Cube
+### Sphere
+A centered, 3D object.
+
+Parameters:
+* radius: A single numeric value desribing the sphere's radius.
+
+* sides: A single integer value for the number of sides of the sphere. (defualt `12`)
+
+Usage:
+```python
+# makes 12-sided sphere of radius 2
+Sphere(2)
+Sphere(radius=2, sides=12)
+# makes 24-sided sphere of radius 4
+Sphere(4, sides=24)
+Sphere(radius=4, sides=24)
+```
+
+### Cylinder
+A centered 3D object.
+
+Parameters:
+* radius:
+
+    A single numeric value desribing the cylinder's radius.
+
+    Two numeric values desribing the cylinder's top and bottom radii.
+
+* sides: A single numeric value for the number of sides of the cylinder. (default `12`)
+
+Usage:
+```python
+# makes a 12-sided cylinder with radius 2
+Cylinder(2)
+Cylinder(radius=2, sides=12)
+# makes a 24-sided cylinder with bottom radius 3 and top radius 5
+Cylinder([3, 5], sides=24)
+Cylinder(radius=[3, 5], sides=24)
+```
+
+### Polyhedron
+Coming soon.
 
 ## Transformations
 
+Transformations modify an existing object, returning the updated value.
+The following transformations apply to all Objects in the format `<object>.<transformation>(<arguments>)`.
+
+### Scale
+Scale Object by given vector.
+
+Parameters:
+* x (default: `1`)
+* y (default: `1`)
+* z (default: `1`)
+
+Usage (given Object `obj`):
+```python
+# scales x by 10
+obj.scale(x=10)
+obj.scale(10, 1, 1)
+```
+
+### 
+Resize Object to given vector.
+
+Parameters:
+* x
+* y
+* z
+
+Usage (given Object `obj`):
+```python
+# resizes object to 10x20x30
+obj.resize(10, 20, 30)
+```
+
+### Rotate
+Rotate an object a given number of degrees around an axis.
+
+Parameters:
+* x (default: `0`)
+* y (default: `0`)
+* z (default: `0`)
+* axis (default: `[0, 0, 0]`) 
+
+Usage (given Object `obj`):
+```python
+# rotate 10 degrees in the x direction around the origin
+obj.rotate(x=10)
+obj.rotate(10, 0, 0, axis=[0, 0, 0])
+# rotate 30 degrees in the z direction around the `[1, 2, 3]`
+obj.rotate(z=30, axis=[1, 2, 3])
+```
+
 ## Combining Objects
 
+Given a list of objects, combine them together to form a new object.
+
+### group
+Create a grouping of a list of objects, leaving the inner objects separate.
+
+Usage (given Objects `obj1, obj2, obj3`)
+```python
+group([obj1, obj2, obj3])
+```
+
+### union
+Create a union of a list of objects.
+
+Usage (given Objects `obj1, obj2, obj3`)
+```python
+union([obj1, obj2, obj3])
+```
+
+### intersection
+Create an intersection of a list of objects.
+
+Usage (given Objects `obj1, obj2, obj3`)
+```python
+intersection([obj1, obj2, obj3])
+```
+
+### difference
+Take the difference between two objects.
+
+Usage (given Objects `obj1, obj2`)
+```python
+difference(obj1, obj2)
+```
+
+### minkowski
+Take the minkowski sum of a list of objects.
+
+Usage (given Objects `obj1, obj2, obj3`)
+```python
+minkowski([obj1, obj2, obj3])
+```
+
+### hull
+Take the convex hull of a list of objects.
+
+Usage (given Objects `obj1, obj2, obj3`)
+```python
+hull([obj1, obj2, obj3])
+```
+
 ## Using Models
+
+Once a model is created, it can be exported using the following:
+
+### save_as
+Save a model under a given filename.
+
+Usage (given Object `obj`):
+```python
+# save model to `model.scad`
+obj.save_as("model.scad")
+```
 
 ## Examples
 
@@ -122,7 +272,7 @@ frame = union([
     # side bars
     group([
         Cube([1, 2.5, 3]),
-        Cube([1, 2.5, 3]).translate(x=2),
+        Cube([1, 2.5, 3]).translate(x=2)
     ]).translate(y=1),
     # front bar
     Cube([3, 1, 1.25]),
@@ -130,14 +280,12 @@ frame = union([
 
 slot = group([
     # cut angle
-    Cube([3, 0.5, 2.5]).rotate(x=-10).translate(0, 0.5, 1),
+    Cube([3, 0.5, 2.5]).rotate(x=-10),
     # remove slot
-    Cube([3, 0.5, 1]).translate(0, 0.5, 1),
-])
+    Cube([3, 0.5, 1]),
+]).translate([0, 0.5, 1])
 
-model = difference(frame, slot)
-
-export_and_render(model)
+difference(frame, slot).save_as("model.scad")
 ```
 
 ### Exponentially-expanding blocks
@@ -159,11 +307,11 @@ Python:
 ```python
 from py2scad import *
 
-model = group()
+model = group([])
 space = 1
 for _ in range(10):
-    model.add(Cube().translate(x=space))
+    model = group([model, (Cube().translate(x=space))])
     space *= 2
 
-export_and_render(model)
+model.save_as("model.scad")
 ```
