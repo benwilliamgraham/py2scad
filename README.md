@@ -127,7 +127,7 @@ Coming soon.
 Transformations modify an existing object, returning the updated value.
 The following transformations apply to all Objects in the format `<object>.<transformation>(<arguments>)`.
 
-### Scale
+### scale
 Scale Object by given vector.
 
 Parameters:
@@ -156,7 +156,7 @@ Usage (given Object `obj`):
 obj.resize(10, 20, 30)
 ```
 
-### Rotate
+### rotate
 Rotate an object a given number of degrees around an axis.
 
 Parameters:
@@ -172,6 +172,23 @@ obj.rotate(x=10)
 obj.rotate(10, 0, 0, axis=[0, 0, 0])
 # rotate 30 degrees in the z direction around the `[1, 2, 3]`
 obj.rotate(z=30, axis=[1, 2, 3])
+```
+
+### translate
+Translate an object by a given vector.
+
+Parameters:
+* x (default: `0`)
+* y (default: `0`)
+* z (default: `0`)
+
+Usage (given Object `obj`):
+```python
+# translate 10 in the z direction
+obj.translate(0, 0, 10)
+obj.translate(z=10)
+# translate by `[1, 2, 3]`
+obj.translate(1, 2, 3)
 ```
 
 ## Combining Objects
