@@ -107,16 +107,18 @@ Parameters:
 
     Two numeric values desribing the cylinder's top and bottom radii.
 
+* height: A single numeric value desribing the cylinder's height.
 * sides: A single numeric value for the number of sides of the cylinder. (default `12`)
+* centered: If the cylinder is centered in the z axis or not. (default `False`)
 
 Usage:
 ```python
-# makes a 12-sided cylinder with radius 2
-Cylinder(2)
-Cylinder(radius=2, sides=12)
-# makes a 24-sided cylinder with bottom radius 3 and top radius 5
-Cylinder([3, 5], sides=24)
-Cylinder(radius=[3, 5], sides=24)
+# makes a 12-sided cylinder with radius 2 and height 4
+Cylinder(2, 4)
+Cylinder(radius=2, height=4, sides=12, centered=False)
+# makes a centered 24-sided cylinder with bottom radius 3, top radius 5, and height 8
+Cylinder([3, 5], 8, sides=24, centered=True)
+Cylinder(radius=[3, 5], height=8, sides=24, centered=True)
 ```
 
 ### Polyhedron
@@ -157,21 +159,18 @@ obj.resize(10, 20, 30)
 ```
 
 ### rotate
-Rotate an object a given number of degrees around an axis.
+Rotate an object a given number of degrees around the origin.
 
 Parameters:
 * x (default: `0`)
 * y (default: `0`)
 * z (default: `0`)
-* axis (default: `[0, 0, 0]`) 
 
 Usage (given Object `obj`):
 ```python
-# rotate 10 degrees in the x direction around the origin
-obj.rotate(x=10)
-obj.rotate(10, 0, 0, axis=[0, 0, 0])
-# rotate 30 degrees in the z direction around the `[1, 2, 3]`
-obj.rotate(z=30, axis=[1, 2, 3])
+# rotate 10 degrees in the z direction
+obj.rotate(z=10)
+obj.rotate(10, 0, 0)
 ```
 
 ### translate
@@ -200,7 +199,7 @@ Create a grouping of a list of objects, leaving the inner objects separate.
 
 Usage (given Objects `obj1, obj2, obj3`)
 ```python
-group([obj1, obj2, obj3])
+group(obj1, obj2, obj3)
 ```
 
 ### union
@@ -208,7 +207,7 @@ Create a union of a list of objects.
 
 Usage (given Objects `obj1, obj2, obj3`)
 ```python
-union([obj1, obj2, obj3])
+union(obj1, obj2, obj3)
 ```
 
 ### intersection
@@ -216,7 +215,7 @@ Create an intersection of a list of objects.
 
 Usage (given Objects `obj1, obj2, obj3`)
 ```python
-intersection([obj1, obj2, obj3])
+intersection(obj1, obj2, obj3)
 ```
 
 ### difference
@@ -232,7 +231,7 @@ Take the minkowski sum of a list of objects.
 
 Usage (given Objects `obj1, obj2, obj3`)
 ```python
-minkowski([obj1, obj2, obj3])
+minkowski(obj1, obj2, obj3)
 ```
 
 ### hull
@@ -240,7 +239,7 @@ Take the convex hull of a list of objects.
 
 Usage (given Objects `obj1, obj2, obj3`)
 ```python
-hull([obj1, obj2, obj3])
+hull(obj1, obj2, obj3)
 ```
 
 ## Using Models
@@ -253,7 +252,7 @@ Save a model under a given filename.
 Usage (given Object `obj`):
 ```python
 # save model to `model.scad`
-obj.save_as("model.scad")
+obj.save_as("model.stl")
 ```
 
 ## Examples
@@ -285,24 +284,24 @@ Python:
 ```python
 from py2scad import *
 
-frame = union([
+frame = union(
     # side bars
-    group([
+    group(
         Cube([1, 2.5, 3]),
         Cube([1, 2.5, 3]).translate(x=2)
-    ]).translate(y=1),
+    ).translate(y=1),
     # front bar
     Cube([3, 1, 1.25]),
-])
+)
 
-slot = group([
+slot = group(
     # cut angle
     Cube([3, 0.5, 2.5]).rotate(x=-10),
     # remove slot
     Cube([3, 0.5, 1]),
-]).translate([0, 0.5, 1])
+).translate(0, 0.5, 1)
 
-difference(frame, slot).save_as("model.scad")
+difference(frame, slot).save_as("model.stl")
 ```
 
 ### Exponentially-expanding blocks
@@ -324,11 +323,11 @@ Python:
 ```python
 from py2scad import *
 
-model = group([])
+model = group()
 space = 1
 for _ in range(10):
-    model = group([model, (Cube().translate(x=space))])
+    model = group(model, (Cube().translate(x=space)))
     space *= 2
 
-model.save_as("model.scad")
+model.save_as("model.stl")
 ```
